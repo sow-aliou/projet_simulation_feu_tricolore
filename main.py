@@ -14,7 +14,6 @@ class SimulationController:
         self.screen.setup(width=900, height=700)
         self.screen.tracer(0)
 
-        # Construction de la scène
         self.scene = SceneBuilder()
         self.scene.draw_background()
         self.scene.draw_roads()
@@ -24,10 +23,8 @@ class SimulationController:
         self.gui = InterfaceManager()
         self.gui.draw_controls()
         
-        # Contrôleur d'intersection (4 feux synchronisés)
         self.intersection = IntersectionController()
         
-        # Gestionnaire de véhicules (avec référence à l'écran pour les images)
         self.veh_manager = VehicleManager(self.screen)
         
         # Logger
@@ -61,9 +58,6 @@ class SimulationController:
         canvas.bind('<Motion>', self.handle_mouse_move)
 
     def handle_mouse_move(self, event):
-        # Conversion coordonnées Tkinter -> Turtle
-        # (0,0) Tkinter = Coin haut-gauche
-        # (0,0) Turtle = Centre
         canvas_width = self.screen.window_width()
         canvas_height = self.screen.window_height()
         
@@ -78,7 +72,6 @@ class SimulationController:
         if not action: 
             return
 
-        # Log de l'interaction utilisateur
         self.logger.log_event("USER_INPUT", f"Clic sur {action}", 
                               self.intersection, self.current_scenario.name)
 
@@ -106,7 +99,7 @@ class SimulationController:
             self.scene.toggle_night_mode(is_night)
             self.veh_manager.toggle_night_mode(is_night)
             self.gui.toggle_night_mode(is_night)
-            self.intersection.redraw() # S'assurer que les feux sont au-dessus de la route
+            self.intersection.redraw() 
             
             self.logger.log_event("SCENARIO", f"Changement vers {self.current_scenario.name}", 
                                   self.intersection, self.current_scenario.name)
@@ -126,7 +119,7 @@ class SimulationController:
         self.veh_manager.vehicles.clear()
         self.veh_manager.next_id = 1
         
-        # Réinitialiser l'intersection
+        
         self.intersection.phase_index = 0
         self.intersection.current_phase = "A"
         self.intersection.timer = 0
@@ -144,7 +137,7 @@ class SimulationController:
 
     def update_dashboard_data(self):
         """Calcule et envoie les stats à l'interface GUI."""
-        # 1. Calcul du temps écoulé
+        
         if not self.is_paused:
             elapsed = time.time() - self.start_time - self.total_paused_time
         else:
@@ -184,7 +177,6 @@ class SimulationController:
                 # Mise à jour de l'intersection
                 self.intersection.update(self.current_scenario)
                 
-                # Mise à jour des véhicules
                 self.veh_manager.update_vehicles(self.intersection)
 
                 # Détection changement de phase
@@ -194,7 +186,7 @@ class SimulationController:
                                           self.intersection, self.current_scenario.name)
                     previous_phase = self.intersection.current_phase
             
-            # Mise à jour Tableau de Bord via GUI
+            
             self.update_dashboard_data()
             
             self.screen.update()

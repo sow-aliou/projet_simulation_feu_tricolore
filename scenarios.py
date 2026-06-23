@@ -10,7 +10,6 @@ class ScenarioStrategy(ABC):
         """Définit comment l'intersection évolue à chaque frame."""
         pass
     
-    # Compatibilité avec l'ancien système (un seul feu)
     def update_light(self, traffic_light):
         """Fallback pour compatibilité."""
         pass
@@ -34,7 +33,6 @@ class NormalScenario(ScenarioStrategy):
 class RushHourScenario(ScenarioStrategy):
     def __init__(self):
         self.name = "Heure de Pointe"
-        # Phases plus longues pour fluidifier le trafic
         self.phase_durations = {
             "A": 200, "A_ORANGE": 30, "B": 200, "B_ORANGE": 30
         }

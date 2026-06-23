@@ -4,10 +4,7 @@ import os
 import math
 
 
-# Directions possibles (Nomenclature : Direction du flux)
-# spawn_x/y : point de départ
-# heading : orientation initiale
-# lane_offset : coordonnée constante de la voie (ex: y=-35 pour EST)
+
 DIRECTIONS = {
     "EST": {"spawn_x": -600, "spawn_y": -35, "heading": 0, "lane_offset": -35, "oncoming": "OUEST"},
     "OUEST": {"spawn_x": 600, "spawn_y": 35, "heading": 180, "lane_offset": 35, "oncoming": "EST"},
@@ -19,9 +16,9 @@ def register_vehicle_shapes(screen):
     """Enregistre toutes les formes de véhicules (Jour/Nuit, Normal/Freinage)."""
 
     def add_car_base(shape, color_roof="#b3e5fc", color_body="gray"):
-        shape.addcomponent(((-12,-14), (-10,-14), (-10,-4), (-12,-4)), "black", "black") # Pneus AR
+        shape.addcomponent(((-12,-14), (-10,-14), (-10,-4), (-12,-4)), "black", "black") 
         shape.addcomponent(((10,-14), (12,-14), (12,-4), (10,-4)), "black", "black")
-        shape.addcomponent(((-12,6), (-10,6), (-10,16), (-12,16)), "black", "black") # Pneus AV
+        shape.addcomponent(((-12,6), (-10,6), (-10,16), (-12,16)), "black", "black") 
         shape.addcomponent(((10,6), (12,6), (12,16), (10,16)), "black", "black")
         shape.addcomponent(((-10,-18), (10,-18), (10,14), (6,22), (-6,22), (-10,14)), color_body, "black") # Corps
         shape.addcomponent(((-7,-10), (7,-10), (7,8), (4,12), (-4,12), (-7,8)), color_roof, "black") # Toit
@@ -38,14 +35,14 @@ def register_vehicle_shapes(screen):
         """Ajoute des clignotants rouges (AV/AR)."""
         x_left, x_right = -9, 5
         if side == "LEFT":
-            # AR G
+           
             shape.addcomponent(((x_left, y_rear), (x_left+width, y_rear), (x_left+width, y_rear+height), (x_left, y_rear+height)), "red", "red")
-            # AV G
+            
             shape.addcomponent(((x_left, y_front), (x_left+width, y_front), (x_left+width, y_front+height), (x_left, y_front+height)), "red", "red")
         elif side == "RIGHT":
-            # AR D
+           
             shape.addcomponent(((x_right, y_rear), (x_right+width, y_rear), (x_right+width, y_rear+height), (x_right, y_rear+height)), "red", "red")
-            # AV D
+           
             shape.addcomponent(((x_right, y_front), (x_right+width, y_front), (x_right+width, y_front+height), (x_right, y_front+height)), "red", "red")
 
     # --- 1. VOITURES & 2. TAXIS ---
@@ -57,7 +54,7 @@ def register_vehicle_shapes(screen):
                     s = turtle.Shape("compound")
                     if v_type == "car":
                         add_car_base(s, color_roof="#1a237e" if night else "#b3e5fc")
-                    else: # taxi
+                    else: 
                         add_car_base(s, color_roof="black", color_body="#fbc02d")
                         s.addcomponent(((-4,-2), (4,-2), (4,2), (-4,2)), "white" if not night else "#ffeb3b", "black")
                     
@@ -85,21 +82,21 @@ def register_vehicle_shapes(screen):
                 s = turtle.Shape("compound")
                 add_minibus_base(s, color_body="#263238" if night else "gray")
                 if night:
-                    s.addcomponent(((-10,25), (-6,25), (-6,30), (-10,30)), "white", "white") # Phares AV
+                    s.addcomponent(((-10,25), (-6,25), (-6,30), (-10,30)), "white", "white") 
                     s.addcomponent(((6,25), (10,25), (10,30), (6,30)), "white", "white")
                 if braking: 
                     s.addcomponent(((-11,-28), (-7,-28), (-7,-25), (-11,-25)), "red", "red")
                     s.addcomponent(((7,-28), (11,-28), (11,-25), (7,-25)), "red", "red")
                 
                 if blink == "_left":
-                    # AR G
+                   
                     s.addcomponent(((-11,-28), (-7,-28), (-7,-25), (-11,-25)), "red", "red")
-                    # AV G
+                    
                     s.addcomponent(((-10,25), (-6,25), (-6,30), (-10,30)), "red", "red")
                 elif blink == "_right":
-                    # AR D
+                    
                     s.addcomponent(((7,-28), (11,-28), (11,-25), (7,-25)), "red", "red")
-                    # AV D
+                   
                     s.addcomponent(((6,25), (10,25), (10,30), (6,30)), "red", "red")
                 
                 screen.register_shape(name, s)
@@ -110,8 +107,6 @@ class Vehicle:
         self.origin = origin_direction
         self.current_direction = origin_direction
         
-        # Choix aléatoire du TYPE
-        # 70% Car, 10% Taxi, 20% Minibus
         type_roll = random.random()
         if type_roll < 0.7: 
             self.v_type = "CAR"
@@ -120,7 +115,6 @@ class Vehicle:
         else: 
             self.v_type = "MINIBUS"
 
-        # Dimensions pour collision (offset capteur)
         self.length_offset = 22
         self.back_offset = 18 
         
@@ -136,7 +130,7 @@ class Vehicle:
         elif r < 0.8: self.turn_intention = "RIGHT"
         else: self.turn_intention = "LEFT"
 
-        # Couleur persistante
+        
         if self.v_type == "CAR":
             self.color = random.choice([
                 "#e74c3c", "#3498db", "#2ecc71", "#ffffff", "#2c3e50", 
@@ -149,7 +143,7 @@ class Vehicle:
                 "#d32f2f", "#1976d2", "#388e3c", "#fbc02d", "#8e24aa",
                 "#00acc1", "#c0ca33", "#fb8c00", "#546e7a"
             ])
-        else: # TAXI
+        else:
             self.color = "#fbc02d"
         
         config = DIRECTIONS[origin_direction]
@@ -165,19 +159,19 @@ class Vehicle:
         self.has_turned = False
         self.is_turning = False
         self.target_heading = self.heading
-        self.night_mode = False # Par défaut jour
+        self.night_mode = False 
         
         self.is_braking = False
         self.blink_timer = 0
-        self.blink_state = False # False = off, True = on
-        self.blink_interval = 12 # Frames entre chaque changement d'état
+        self.blink_state = False
+        self.blink_interval = 12 
         
         self.shape = turtle.Turtle()
         self.shape.speed(0)
         self.shape.penup()
         
         if screen:
-            pass # Déjà enregistré par VehicleManager
+            pass 
             
         self._apply_visuals()
         
@@ -195,7 +189,7 @@ class Vehicle:
         if self.is_braking:
             suffix += "_braking"
         
-        # Ajout du clignotant si actif
+        
         if self.blink_state:
             if self.turn_intention == "LEFT": suffix += "_left"
             elif self.turn_intention == "RIGHT": suffix += "_right"
@@ -231,12 +225,12 @@ class Vehicle:
                 self.blink_timer = 0
                 self.blink_state = not self.blink_state
                 self._apply_visuals()
-        elif self.blink_state: # Éteindre si fini ou tout droit
+        elif self.blink_state: 
             self.blink_state = False
             self.blink_timer = 0
             self._apply_visuals()
             
-        # Si vitesse nulle, pas de mouvement
+        
         if self.current_speed == 0:
             return
 
@@ -246,8 +240,6 @@ class Vehicle:
                 self._check_turn_trigger()
             
             if self.is_turning:
-                # Rotation progressive (env 6 degrés par frame à vitesse normale)
-                # On ajuste la vitesse de rotation selon la vitesse actuelle
                 turn_step = 6 * (self.current_speed / self.max_speed) if self.max_speed > 0 else 6
                 
                 diff = (self.target_heading - self.heading + 180) % 360 - 180
@@ -276,34 +268,31 @@ class Vehicle:
 
     def _check_turn_trigger(self):
         """Déclenche le virage au bon moment pour une trajectoire courbe et éviter l'îlot central."""
-        # Pour v=4, le rayon de braquage R est d'environ 38 pixels.
-        # Pour v=3.5 (minibus), R est d'environ 33 pixels.
-        # On ajuste les seuils pour atterrir dans la voie (abs=35) tout en contournant l'îlot (r=22).
         
         start_turn = False
         
-        if self.origin == "EST": # Vers +X, y=-35
-            if self.turn_intention == "LEFT": # Vers NORD (x=35, y>0)
+        if self.origin == "EST": 
+            if self.turn_intention == "LEFT": 
                 if self.x >= -3: start_turn = True; self.target_heading = 90; self.current_direction = "NORD"
-            elif self.turn_intention == "RIGHT": # Vers SUD (x=-35, y<0)
+            elif self.turn_intention == "RIGHT": 
                 if self.x >= -73: start_turn = True; self.target_heading = 270; self.current_direction = "SUD"
 
-        elif self.origin == "OUEST": # Vers -X, y=35
-            if self.turn_intention == "LEFT": # Vers SUD (x=-35, y<0)
+        elif self.origin == "OUEST": 
+            if self.turn_intention == "LEFT": 
                 if self.x <= 3: start_turn = True; self.target_heading = 270; self.current_direction = "SUD"
-            elif self.turn_intention == "RIGHT": # Vers NORD (x=35, y>0)
+            elif self.turn_intention == "RIGHT": 
                 if self.x <= 73: start_turn = True; self.target_heading = 90; self.current_direction = "NORD"
 
-        elif self.origin == "NORD": # Vers +Y, x=35
-            if self.turn_intention == "LEFT": # Vers OUEST (y=35, x<0)
+        elif self.origin == "NORD":
+            if self.turn_intention == "LEFT":
                 if self.y >= -3: start_turn = True; self.target_heading = 180; self.current_direction = "OUEST"
-            elif self.turn_intention == "RIGHT": # Vers EST (y=-35, x>0)
+            elif self.turn_intention == "RIGHT": 
                 if self.y >= -73: start_turn = True; self.target_heading = 0; self.current_direction = "EST"
 
-        elif self.origin == "SUD": # Vers -Y, x=-35
-            if self.turn_intention == "LEFT": # Vers EST (y=-35, x>0)
+        elif self.origin == "SUD":
+            if self.turn_intention == "LEFT":
                 if self.y <= 3: start_turn = True; self.target_heading = 0; self.current_direction = "EST"
-            elif self.turn_intention == "RIGHT": # Vers OUEST (y=35, x<0)
+            elif self.turn_intention == "RIGHT": 
                 if self.y <= 73: start_turn = True; self.target_heading = 180; self.current_direction = "OUEST"
         
         if start_turn:
@@ -344,7 +333,7 @@ class Vehicle:
             front_y = self.y - front_offset
             dist = front_y - light_pos
             
-        # Si on a passé le feu, on ne s'arrête plus
+       
         if dist < -15: 
             return
 
@@ -382,7 +371,6 @@ class Vehicle:
                     if my_dist_sq < 70**2:
                         return
 
-                    # Sinon on attend s'il y a du monde en face
                     if dist_sq < 250**2 and my_dist_sq < 160**2:
                         self.current_speed = 0
                         return
@@ -393,11 +381,9 @@ class Vehicle:
             return
             
         rad_heading = math.radians(self.heading)
-        # On réduit la portée du capteur pour éviter les faux positifs en virage
         sensor_x = self.x + math.cos(rad_heading) * 30 
         sensor_y = self.y + math.sin(rad_heading) * 30 
         
-        # Rayon très serré pour les collisions latérales
         safety_radius = 22 
         
         for v in vehicles:
@@ -415,9 +401,7 @@ class Vehicle:
             # Vérification de proximité immédiate (sensor)
             sensor_dist_sq = (v.x - sensor_x)**2 + (v.y - sensor_y)**2
             if sensor_dist_sq < safety_radius**2:
-                # Si on est en "Clear the Box" (au centre), on est plus agressif
                 if self.x**2 + self.y**2 < 80**2:
-                    # On ne s'arrête que si c'est VRAIMENT une collision même trajectoire
                     if abs(-dx * math.sin(rad_heading) + dy * math.cos(rad_heading)) < 15:
                         self.current_speed = 0
                         return
@@ -425,8 +409,6 @@ class Vehicle:
                     self.current_speed = 0
                     return
             
-            # File d'attente sur la même voie
-            # Calcul de la distance d'arrêt souhaitée : mon avant + son arrière + marge
             min_gap = 10
             stop_dist = self.front_offset + v.back_offset + min_gap
             slow_dist = stop_dist + 30
@@ -441,9 +423,7 @@ class Vehicle:
 
     def check_intersection_speed(self):
         """Réduit la vitesse si le véhicule est dans le carrefour."""
-        # Zone de l'intersection (approx -140 à 140 sur les deux axes)
         if abs(self.x) < 140 and abs(self.y) < 140:
-            # Réduit à 60% de la vitesse max
             self.current_speed = self.max_speed * 0.6
 
 class VehicleManager:
@@ -487,13 +467,10 @@ class VehicleManager:
             if not v.is_active:
                 continue
             
-            # RESET SYSTÉMATIQUE: On part du principe qu'on veut avancer
             v.current_speed = v.max_speed
             
-            # Réduction de vitesse en intersection
             v.check_intersection_speed()
             
-            # Application des freins (dans l'ordre d'importance)
             if not v.has_turned:
                 light_state = intersection_controller.get_light_state(v.origin)
                 light_pos = intersection_controller.get_stop_position(v.origin)

@@ -6,10 +6,10 @@ class IntersectionController:
     def __init__(self):
         # Feux de circulation (Nomenclature : Direction du FLUX)
         self.lights = {
-            "EST": TrafficLight(-100, -100, "EST", 0.7),   # Flux vers l'Est
-            "OUEST": TrafficLight(100, 100, "OUEST", 0.7), # Flux vers l'Ouest
-            "NORD": TrafficLight(100, -100, "NORD", 0.7),  # Flux vers le Nord
-            "SUD": TrafficLight(-100, 100, "SUD", 0.7)     # Flux vers le Sud
+            "EST": TrafficLight(-100, -100, "EST", 0.7),   
+            "OUEST": TrafficLight(100, 100, "OUEST", 0.7), 
+            "NORD": TrafficLight(100, -100, "NORD", 0.7),  
+            "SUD": TrafficLight(-100, 100, "SUD", 0.7)     
         }
         
         # Positions d'arrêt (Flux Est s'arrête en -135, Flux Ouest en 135, etc.)
@@ -20,7 +20,7 @@ class IntersectionController:
             "SUD": 135     # Y max
         }
         
-        # Phase actuelle (A = Flux N-S actif, B = Flux E-W actif)
+        
         self.current_phase = "A"
         self.timer = 0
         

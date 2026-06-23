@@ -15,7 +15,6 @@ class TrafficLight:
         self.pen.speed(0)
         self.pen.penup()
         
-        # Durées (en frames, approx 50 frames = 1 seconde)
         self.durations = {"VERT": 100, "ORANGE": 40, "ROUGE": 100}
         
         self.redraw()
@@ -58,7 +57,7 @@ class TrafficLight:
         if self.state == "ROUGE": colors["ROUGE"] = "red"
         elif self.state == "ORANGE": colors["ORANGE"] = "orange"
         elif self.state == "VERT": colors["VERT"] = "#00FF00"
-        elif self.state == "ETEINT": pass  # Tout reste sombre
+        elif self.state == "ETEINT": pass 
 
         scale = self.size_scale
         spacing = int(18 * scale)

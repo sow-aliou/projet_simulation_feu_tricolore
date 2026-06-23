@@ -87,7 +87,6 @@ class SceneBuilder:
         BITUMEN = palette["bitumen"]
         CURB = palette["curb"]
         
-        # 1. Remplissage des Fonds (Pelouses)
         self.pen.color(LAWN)
         def draw_rect(x1, y1, x2, y2):
             self.pen.penup(); self.pen.goto(x1, y1); self.pen.begin_fill()
@@ -95,12 +94,12 @@ class SceneBuilder:
                 self.pen.goto(p)
             self.pen.end_fill()
             
-        draw_rect(-1000, 130, -130, 1000) # HG
-        draw_rect(130, 130, 1000, 1000)   # HD
-        draw_rect(-1000, -1000, -130, -130) # BG
-        draw_rect(130, -1000, 1000, -130)   # BD
+        draw_rect(-1000, 130, -130, 1000) 
+        draw_rect(130, 130, 1000, 1000)  
+        draw_rect(-1000, -1000, -130, -130) 
+        draw_rect(130, -1000, 1000, -130)   
 
-        # 2. Logiciel de dessin des Blocs avec angles corrigés
+       
         def draw_sidewalk_corner(sx, sy, h_start, circle_r):
             # Remplissage Bitume
             self.pen.penup()
@@ -123,15 +122,15 @@ class SceneBuilder:
             self.pen.circle(circle_r, 90); self.pen.goto(1000 * sx, 70 * sy)
             self.pen.penup()
             
-            # Bordure Extérieure (Côté Pelouse - Trait pour angles)
+            
             self.pen.goto(130 * sx, 1000 * sy); self.pen.pendown()
             self.pen.goto(130 * sx, 130 * sy); self.pen.goto(1000 * sx, 130 * sy)
             self.pen.penup(); self.pen.pensize(1)
 
-        draw_sidewalk_corner(-1, 1, 270, -60) # HG
-        draw_sidewalk_corner(1, 1, 270, 60)   # HD
-        draw_sidewalk_corner(-1, -1, 90, 60)  # BG
-        draw_sidewalk_corner(1, -1, 90, -60)  # BD
+        draw_sidewalk_corner(-1, 1, 270, -60) 
+        draw_sidewalk_corner(1, 1, 270, 60)   
+        draw_sidewalk_corner(-1, -1, 90, 60)  
+        draw_sidewalk_corner(1, -1, 90, -60)  
         self.pen.setheading(0)
 
     def _draw_lane_arrows(self):
@@ -151,7 +150,7 @@ class SceneBuilder:
     def _draw_lane_markings(self):
         """Dessine les lignes de voies."""
         palette = self.colors["night" if self.night_mode else "day"]
-        # Doubles Jaunes
+        
         self.pen.pensize(2); self.pen.color(palette["yellow"])
         for offset in [-2, 2]:
             for orientation in [0, 90]:
@@ -218,10 +217,8 @@ class SceneBuilder:
 
     def _draw_central_island(self):
         """Dessine un îlot central circulaire réduit pour laisser passer les véhicules."""
-        # Bordure granit (Rayon réduit à 22)
         self.pen.penup(); self.pen.goto(0, -22); self.pen.color("#90a4ae")
         self.pen.begin_fill(); self.pen.circle(22); self.pen.end_fill()
-        # Centre herbeux (Rayon réduit à 18)
         self.pen.penup(); self.pen.goto(0, -18); self.pen.color("#1b5e20")
         self.pen.begin_fill(); self.pen.circle(18); self.pen.end_fill()
 

@@ -36,4 +36,4 @@ class Logger:
         params = (timestamp, type_action, action, etat_feu, scenario_name, id_voiture, pos_x, pos_y, vitesse)
         
         self.db.execute_query(query, params)
-        print(f"[LOG] {action}") # Feedback console
+        print(f"[LOG] {action}")

@@ -29,14 +29,14 @@ class Button:
         theme_to_use = "active" if self.is_active else self.theme
         p = self.palettes.get(theme_to_use, self.palettes["gray"])
         
-        # 1. Effet d'ombre/bordure lumineuse (Glow effect)
+        
         if self.is_active:
             pen.penup(); pen.pensize(4); pen.color(p["border"])
             pen.goto(self.x - 1, self.y - 1); pen.pendown()
             self._rounded_rect(pen, self.w + 2, self.h + 2, 8)
             pen.penup()
 
-        # 2. Fond du bouton (Arrondi)
+        # 1. Fond du bouton 
         pen.penup(); pen.goto(self.x, self.y)
         pen.begin_fill(); pen.color(p["bg"])
         self._rounded_rect(pen, self.w, self.h, 6)
@@ -50,10 +50,11 @@ class Button:
 
         # 4. Label (Centrage vertical corrigé pour les icônes)
         pen.penup(); pen.color(p["text"])
-        # Ajustement fin pour Turtle : on décale légèrement vers le bas (-1 ou -2) car Turtle dessine souvent "haut"
         y_offset = (self.h - self.font_size) / 2 - 2
         pen.goto(self.x + self.w/2, self.y + y_offset)
-        font_family = "Segoe UI" if os.name == 'nt' else "Verdana"
+        font_family = "Segoe UI" if os.name == 'nt' else "DejaVu Sans"
+        if os.name != 'nt':
+            font_family = "DejaVu Sans"
         pen.write(self.label, align="center", font=(font_family, self.font_size, "bold" if self.is_active else "normal"))
 
     def _rounded_rect(self, pen, w, h, r):
@@ -81,29 +82,25 @@ class InterfaceManager:
         self.tooltip_pen.speed(0)
         self.tooltip_pen.penup()
         self.last_hovered = None
-        self.night_mode = False # Par défaut jour
+        self.night_mode = False 
         
-        y_top = 280
-        y_bot = -300
-        
+        # Initialisation des positions
         y_top = 275
         x_start = -550
         
-        # Top Controls (Shifted Left) - Taille d'icône réduite pour éviter les débordements
+        # Commandes 
         self.buttons.append(Button("▶",   x_start,      y_top, 85, 30, "green", "PLAY", tooltip="Démarrer", font_size=20))
         self.buttons.append(Button("⏸", x_start + 90, y_top, 85, 30, "orange", "PAUSE", tooltip="Pause", font_size=20))
         self.buttons.append(Button("■",  x_start + 180, y_top, 85, 30, "red", "STOP", tooltip="Arrêter", font_size=20))
         self.buttons.append(Button("↺",  x_start + 270, y_top, 85, 30, "blue", "RESET", tooltip="Réinitialiser", font_size=20))
 
-        # Scenario Block - Bottom Left (Vertical)
+        # Bloc Scénarios 
         y_start = -160
-        x_left = -542 # Adjusted for centering (Panel is at -555, width 175)
-        self.buttons.append(Button("🌿 Normal",     x_left, y_start, 150, 30, "gray", "SCENARIO_1"))
-        self.buttons.append(Button("🏙️ Pointe",     x_left, y_start - 40, 150, 30, "gray", "SCENARIO_2"))
-        self.buttons.append(Button("🌙 Nuit",       x_left, y_start - 80, 150, 30, "gray", "SCENARIO_3"))
-        self.buttons.append(Button("🎮 Manuel",     x_left, y_start - 120, 150, 30, "gray", "SCENARIO_4"))
-        
-        # Bouton Action (Manuel) - Restauré et centré
+        x_left = -542 
+        self.buttons.append(Button("☀  Normal",    x_left, y_start, 150, 30, "gray", "SCENARIO_1", font_size=12))
+        self.buttons.append(Button("☍  Pointe",    x_left, y_start - 40, 150, 30, "gray", "SCENARIO_2", font_size=12))
+        self.buttons.append(Button("☾  Nuit",      x_left, y_start - 80, 150, 30, "gray", "SCENARIO_3", font_size=12))
+        self.buttons.append(Button("⚙  Manuel",    x_left, y_start - 120, 150, 30, "gray", "SCENARIO_4", font_size=12))
         self.buttons.append(Button("⚡ ACTIONS",    x_left, y_start - 180, 150, 35, "purple", "MANUAL_CLICK", tooltip="Changer de phase"))
         
         # Stats pour le tableau de bord
@@ -144,32 +141,32 @@ class InterfaceManager:
     def draw_controls(self):
         self.pen.clear()
         
-        # Couleurs des panneaux (Simu Glassmorphism)
+        # Couleurs des panneaux 
         if not self.night_mode:
-            panel_bg = "#263238"  # Slate dark
+            panel_bg = "#263238" 
             panel_border = "#455a64"
             title_color = "#e0f7fa"
             accent = "#00acc1"
         else:
-            panel_bg = "#0a0c10"  # Deep black
-            panel_border = "#00e5ff" # Cyan glow
+            panel_bg = "#0a0c10"  
+            panel_border = "#00e5ff" 
             title_color = "#00e5ff"
             accent = "#00e5ff"
         
-        # 1. Top Panel (Commandes)
+        # 1. Panneau Supérieur (Commandes)
         self._panel(-555, 270, 365, 75, panel_bg, panel_border)
         
-        # Titre Commandes
+        # Titre 
         self.pen.penup(); self.pen.color(title_color)
         self.pen.goto(-372, 318)
         self.pen.write("COMMANDES", align="center", font=("Verdana", 9, "bold"))
         
-        # Ligne de séparation Commandes
+        
         self.pen.penup(); self.pen.pensize(1); self.pen.color(panel_border)
         self.pen.goto(-545, 310); self.pen.pendown()
         self.pen.goto(-300, 310); self.pen.penup()
         
-        # 2. Left Panel (Scenarios)
+        # 2. Panneau de Gauche (Scénarios)
         self._panel(-555, -380, 175, 280, panel_bg, panel_border)
         
         self.pen.penup(); self.pen.color(title_color)
@@ -180,39 +177,40 @@ class InterfaceManager:
         self.pen.goto(-545, -125); self.pen.pendown()
         self.pen.goto(-390, -125); self.pen.penup()
         
-        # 3. New Dashboard Panel (Top Right) - Agrandi et étendu vers le bas
-        self._panel(160, 150, 280, 195, panel_bg, panel_border)
+        # 3. Panneau Tableau de Bord  
+        self._panel(100, 150, 340, 195, panel_bg, panel_border)
         
         # Titre Dashboard
         self.pen.penup(); self.pen.color(title_color)
-        self.pen.goto(300, 318)
-        self.pen.write("TABLEAU DE BORD", align="center", font=("Verdana", 10, "bold"))
+        self.pen.goto(270, 318) 
+        font_main = "Segoe UI" if os.name == 'nt' else "DejaVu Sans"
+        self.pen.write("TABLEAU DE BORD", align="center", font=(font_main, 10, "bold"))
         
         self.pen.penup(); self.pen.pensize(1); self.pen.color(panel_border)
-        self.pen.goto(170, 310); self.pen.pendown()
+        self.pen.goto(110, 310); self.pen.pendown()
         self.pen.goto(430, 310); self.pen.penup()
         
         # Affichage des Stats
         y_stats = 280
-        x_label = 175
-        x_val = 295
+        x_label = 115
+        x_val = 265
         
         stats_labels = [
-            ("⏱ Temps",      self.stats["time"]),
-            ("🚗 Véhicules",  f"{self.stats['vehicles']:02d}"),
+            ("⌛ Temps",      self.stats["time"]),
+            ("⛐ Véhicules",  f"{self.stats['vehicles']:02d}"),
             ("⚡ Fluidité",  f"{self.stats['fluidity']}%"),
             ("🚥 Phase",      self.stats["phase"]),
-            ("🎭 Scénario",   self.stats["scenario"])
+            ("❃ Scénario",   self.stats["scenario"])
         ]
         
         for label, val in stats_labels:
             self.pen.goto(x_label, y_stats)
             self.pen.color("#90a4ae")
-            self.pen.write(label, font=("Verdana", 12, "normal")) # Police 10 -> 12
+            self.pen.write(label, font=(font_main, 14, "normal")) 
             self.pen.goto(x_val, y_stats)
             self.pen.color("white")
-            self.pen.write(f":  {val}", font=("Verdana", 12, "bold")) # Police 10 -> 12
-            y_stats -= 26 # Espacement 22 -> 26
+            self.pen.write(f":  {val}", font=(font_main, 14, "bold")) 
+            y_stats -= 28
 
         for btn in self.buttons:
             btn.draw(self.pen)
@@ -220,11 +218,8 @@ class InterfaceManager:
     def _panel(self, x, y, w, h, bg, border=""):
         """Dessine un panneau de contrôle arrondi et élégant."""
         self.pen.penup()
-        r = 10 # Rayon de l'arrondi
-        
-        # On s'assure que y est le bas et h est positif pour le remplissage
-        # Notre dessin part de x,y (coin bas gauche)
-        
+        r = 10 
+
         # Fond
         self.pen.goto(x+r, y); pen = self.pen
         pen.setheading(0)
@@ -265,7 +260,7 @@ class InterfaceManager:
 
     def draw_tooltip(self, btn):
         x = btn.x + btn.w / 2
-        y = btn.y - 20 # Espacement info-bulle
+        y = btn.y - 20 
         
         text = btn.tooltip
         self.tooltip_pen.color("#00e5ff" if self.night_mode else "#fdd835")
