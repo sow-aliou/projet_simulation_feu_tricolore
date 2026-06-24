@@ -25,7 +25,8 @@ COPY . /app
 RUN echo '#!/bin/bash\n\
 export DISPLAY=:0\n\
 # Démarrer le serveur X et VNC combiné (TigerVNC)\n\
-Xvnc :0 -SecurityTypes None -geometry 1280x900x16 -BlacklistTimeout 0 -BlacklistThreshold 100000 &\n\
+rm -rf /tmp/.X* /tmp/.X11-unix/X*\n\
+Xvnc :0 -SecurityTypes None -geometry 1280x900 -depth 16 -BlacklistTimeout 0 -BlacklistThreshold 100000 &\n\
 sleep 1\n\
 # Démarrer un gestionnaire de fenêtres basique\n\
 fluxbox &\n\
