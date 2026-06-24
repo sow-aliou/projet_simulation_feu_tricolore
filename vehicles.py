@@ -151,8 +151,8 @@ class Vehicle:
         self.y = config["spawn_y"]
         self.heading = config["heading"]
         
-        self.max_speed = 4
-        if self.v_type == "MINIBUS": self.max_speed = 3.5
+        self.max_speed = 7.0
+        if self.v_type == "MINIBUS": self.max_speed = 6.0
         
         self.current_speed = self.max_speed
         self.is_active = True
@@ -240,7 +240,8 @@ class Vehicle:
                 self._check_turn_trigger()
             
             if self.is_turning:
-                turn_step = 6 * (self.current_speed / self.max_speed) if self.max_speed > 0 else 6
+                # Le rayon de braquage doit rester constant, on le fixe à 1.5 degré par pixel
+                turn_step = self.current_speed * 1.5
                 
                 diff = (self.target_heading - self.heading + 180) % 360 - 180
                 if abs(diff) <= turn_step:
@@ -422,9 +423,9 @@ class Vehicle:
                      return
 
     def check_intersection_speed(self):
-        """Réduit la vitesse si le véhicule est dans le carrefour."""
+        """Ralentit davantage la voiture dans le carrefour pour des virages réalistes."""
         if abs(self.x) < 140 and abs(self.y) < 140:
-            self.current_speed = self.max_speed * 0.6
+            self.current_speed = self.max_speed * 0.45  # Vitesse réduite pour un virage en douceur
 
 class VehicleManager:
     def __init__(self, screen=None):
