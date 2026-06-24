@@ -31,9 +31,9 @@ sleep 1\n\
 # Démarrer un gestionnaire de fenêtres basique\n\
 fluxbox &\n\
 # Démarrer le serveur VNC sur cet écran\n\
-x11vnc -display :0 -nopw -listen localhost -xkb -forever &\n\
+x11vnc -display :0 -nopw -listen 127.0.0.1 -xkb -forever -shared &\n\
 # Démarrer le serveur Web (noVNC) qui diffusera le VNC\n\
-websockify --web /usr/share/novnc/ ${PORT:-10000} localhost:5900 &\n\
+websockify --web /usr/share/novnc/ ${PORT:-10000} 127.0.0.1:5900 &\n\
 # Lancer TON projet Python\n\
 python3 main.py\n\
 ' > /app/entrypoint.sh
