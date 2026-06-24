@@ -11,7 +11,7 @@ Projet de simulation de trafic routier au niveau d'un carrefour avec feux tricol
 
 ## Prérequis
 - Python 3.x (La bibliothèque `turtle` est incluse de base avec Python).
-
+![alt text](<Capture d’écran du 2026-06-23 18-15-52.png>)
 ## Exécution
 Pour lancer la simulation, exécutez la commande suivante à la racine du projet :
 
