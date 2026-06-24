@@ -6,8 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Installation des dépendances systèmes pour l'interface graphique et le streaming web
 RUN apt-get update && apt-get install -y \
     python3-tk \
-    xvfb \
-    x11vnc \
+    tigervnc-standalone-server \
     fluxbox \
     novnc \
     websockify \
@@ -25,13 +24,11 @@ COPY . /app
 # Créer le script de démarrage qui va tout lancer
 RUN echo '#!/bin/bash\n\
 export DISPLAY=:0\n\
-# Démarrer un écran virtuel invisible\n\
-Xvfb :0 -screen 0 1024x768x16 &\n\
+# Démarrer le serveur X et VNC combiné (TigerVNC)\n\
+Xvnc :0 -SecurityTypes None -geometry 1024x768x16 &\n\
 sleep 1\n\
 # Démarrer un gestionnaire de fenêtres basique\n\
 fluxbox &\n\
-# Démarrer le serveur VNC sur cet écran\n\
-x11vnc -display :0 -nopw -listen 127.0.0.1 -xkb -forever -shared &\n\
 # Démarrer le serveur Web (noVNC) qui diffusera le VNC\n\
 websockify --web /usr/share/novnc/ ${PORT:-10000} 127.0.0.1:5900 &\n\
 # Lancer TON projet Python\n\
