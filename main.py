@@ -11,7 +11,7 @@ class SimulationController:
     def __init__(self):
         self.screen = turtle.Screen()
         self.screen.title("Simulation Carrefour - Projet L3 ")
-        self.screen.setup(width=900, height=700)
+        self.screen.setup(width=1200, height=800)
         self.screen.tracer(0)
 
         self.scene = SceneBuilder()
